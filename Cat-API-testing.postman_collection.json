@@ -2,8 +2,293 @@
 	"info": {
 		"_postman_id": "0be8f85a-a829-44ba-a91b-cd00a18bd60e",
 		"name": "Cat-API-testing",
+		"description": "Familiarizing with the API Documentation involves reviewing available endpoints and their functions, understanding which parameters are required, which are optional, and their acceptable values, and ensuring how to send the API key (e.g., via HTTP headers). Conducting tests includes testing different endpoints by sending GET, POST, PUT, DELETE requests to various endpoints, such as /breeds and /images/search. It also involves verifying responses by checking the response status (e.g., 200 OK), data format (e.g., JSON), and content (whether it contains the expected data), testing the API with different combinations of required and optional parameters, testing parameters with minimum, maximum, and unusual values (e.g., very large numbers, special characters), and attempting to access resources without an API key or with an incorrect key to check for unauthorized access.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30438376"
 	},
-	"item": []
+	"item": [
+		{
+			"name": "Get random images",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Should verify response status code\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Should verify response time\", function() {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Should verify response's header \\\"authenticated\\\"\", () => {\r",
+							"    pm.expect(pm.response.headers.get(\"authenticated\")).to.eql(\"false\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/search",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Display limit of 10 images",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Should verify response status code\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has 10 cat images\", function () {\r",
+							"    const cats = pm.response.json();\r",
+							"    pm.expect(cats.length).to.eql(10);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each image has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    jsonData.forEach(cat => {\r",
+							"        pm.expect(cat).to.have.property('id');\r",
+							"        pm.expect(cat).to.have.property('url');\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/search?limit=10",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"search"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Display more than 10 photos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/search?limit=14&api_key={{api_key}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"search"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "14"
+						},
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/8pCFG7gCV",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"8pCFG7gCV"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Breed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/search?breed_ids=aege",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"search"
+					],
+					"query": [
+						{
+							"key": "breed_ids",
+							"value": "aege"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create vote",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image_id\": \"ozEvzdVM-\",\r\n    \"sub_id\": \"malgo\",\r\n    \"value\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/votes?api_key={{api_key}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"votes"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get vote",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/votes?api_key={{api_key}}&sub_id=malgo",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"votes"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "sub_id",
+							"value": "malgo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://api.thecatapi.com/v1/votes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/images/upload",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "api_key",
+			"value": "live_bWyYdYMIVDxayEEgRnMejpbgILwa6aknzA1eu8FxqJtVnMQKjKraOA5VJvo2RTDU"
+		}
+	]
 }
